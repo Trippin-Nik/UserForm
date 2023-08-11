@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f8f8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-image: linear-gradient(
+          30deg,
+          lightgreen,
+          lavender,
+          lightyellow,
+          lightblue,
+          lightpink
+        );
+        animation: gradientBackground 7s ease infinite;
+      }
+
+      @keyframes gradientBackground {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      form {
+        width: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 5px;
+        padding: 20px;
+        box-sizing: border-box;
+        margin: 4rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="tel"],
+      input[type="email"],
+      input[type="file"] {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      input[type="file"] {
+        padding: 10px;
+      }
+
+      input[type="submit"] {
+        background: linear-gradient(135deg, #bfd1cf 0%, #324644 100%);
+        color: #fff;
+        border: none;
+        padding: 10px 268px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background 0.3s ease;
+      }
+
+      input[type="submit"]:hover {
+        background: linear-gradient(135deg, #324644 0%, #bfd1cf 100%);
+      }
+
+      input[type="text"]:focus {
+        outline: none;
+        border: 3px solid #555;
+      }
+
+      input[type="number"]:focus {
+        outline: none;
+        border: 3px solid #555;
+      }
+
+      input[type="tel"]:focus {
+        outline: none;
+        border: 3px solid #555;
+      }
+
+      input[type="email"]:focus {
+        outline: none;
+        border: 3px solid #555;
+      }
+
+      input[type="file"]:focus {
+        outline: none;
+        border: 3px solid #555;
+      }
+    </style>
+  </head>
+  <body>
+    <form
+      enctype="multipart/form-data"
+      onsubmit="return validate()"
+      method="post"
+      action="/api/users/"
+    >
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name" placeholder="Name" />
+
+      <label for="age">Age:</label>
+      <input type="number" name="age" id="age" placeholder="Age" />
+
+      <label for="city">City:</label>
+      <input type="text" name="city" id="city" placeholder="City" />
+
+      <label for="mobile">Mobile:</label>
+      <input type="tel" name="mobile" id="mobile" placeholder="Mobile" />
+
+      <label for="email">Email:</label>
+      <input type="email" name="email" id="email" placeholder="Email" />
+
+      <label for="resume">Resume (DOCX or PDF only):</label>
+      <input type="file" name="resume" id="resume" accept=".docx,.pdf" />
+
+      <label for="photo">Photo (PNG only):</label>
+      <input
+        type="file"
+        name="photo"
+        id="photo"
+        accept=".png"
+        onchange="validatePhoto(this)"
+      />
+
+      <input type="submit" value="Submit" />
+    </form>
+    <script>
+      const nameRegex = /^[A-Za-z\s]{2,50}$/;
+      const ageRegex = /^\d{1,3}$/;
+      const cityRegex = /^[A-Za-z\s\-,.()]{2,50}$/;
+      const mobileRegex = /^\d{10}$/;
+      const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+      const regexarr = [
+        nameRegex,
+        ageRegex,
+        cityRegex,
+        mobileRegex,
+        emailRegex,
+      ];
+
+      var name = document.getElementById("name");
+      var age = document.getElementById("age");
+      var mobile = document.getElementById("mobile");
+      var city = document.getElementById("city");
+      var email = document.getElementById("email");
+      var resume = document.getElementById("resume");
+      var photo = document.getElementById("photo");
+
+      var array = [name, age, city, mobile, email];
+
+      function validate() {
+        // event.preventDefault();
+        const fields = [
+          {
+            id: "name",
+            regex: /^[A-Za-z\s]{2,50}$/,
+            errorMsg: "Please enter a valid name.",
+          },
+          {
+            id: "age",
+            regex: /^\d{1,3}$/,
+            errorMsg: "Please enter a valid age.",
+          },
+          {
+            id: "city",
+            regex: /^[A-Za-z\s\-,.()]{2,50}$/,
+            errorMsg: "Please enter a valid city.",
+          },
+          {
+            id: "mobile",
+            regex: /^\d{10}$/,
+            errorMsg: "Please enter a valid mobile number.",
+          },
+          {
+            id: "email",
+            regex: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+            errorMsg: "Please enter a valid email address.",
+          },
+        ];
+
+        let isValid = true;
+
+        fields.forEach((field) => {
+          const inputField = document.getElementById(field.id);
+          if (!field.regex.test(inputField.value)) {
+            alert(field.errorMsg);
+            isValid = false;
+          }
+        });
+
+        if (!resume.files[0]) {
+          alert("Please select a valid resume.");
+          isValid = false;
+        }
+
+        if (!photo.files[0]) {
+          alert("Please select a valid photo.");
+          isValid = false;
+        }
+        if (isValid) {
+          fields.forEach((field) => {
+            const inputField = document.getElementById(field.id);
+            localStorage.setItem(field.id, inputField.value);
+          });
+          alert("Form data is valid. Saving....");
+          // Add form submission logic here (e.g., form.submit())
+          document.querySelector("form").submit();
+        } else {
+          fields.forEach((field) => {
+            const inputField = document.getElementById(field.id);
+            inputField.value = localStorage.getItem(field.id) || "";
+          });
+        }
+        return false;
+      }
+
+      function validatePhoto(fileInput) {
+        const file = fileInput.files[0];
+        const validFileType = ["image/png"];
+        const maxFileSizeKB = 1000;
+        const maxDimensions = { width: 400, height: 300 };
+
+        if (
+          file &&
+          validFileType.includes(file.type) &&
+          file.size <= maxFileSizeKB * 1024
+        ) {
+          const img = new Image();
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            img.src = e.target.result;
+
+            img.onload = function () {
+              const width = img.width;
+              const height = img.height;
+
+              if (
+                width <= maxDimensions.width &&
+                height <= maxDimensions.height
+              ) {
+                // Photo is valid
+              } else {
+                alert("Photo dimensions must be less than 400 x 300 pixels.");
+                fileInput.value = ""; // Reset the file input to allow selecting a new file
+              }
+            };
+          };
+
+          reader.readAsDataURL(file);
+        } else {
+          alert("Please select a valid PNG image (max 1000 KB).");
+          fileInput.value = ""; // Reset the file input to allow selecting a new file
+        }
+      }
+    </script>
+  </body>
+</html>
